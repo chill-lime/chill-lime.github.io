@@ -94,7 +94,7 @@
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             opacity: 0;
             transform: translateY(20px) scale(0.95);
-            pointer-events: none;
+            pointer-events: none; /* 卡片隐藏时自身不可点击 */
             visibility: hidden;
         }
         .floating-contact-card.is-visible {
@@ -102,6 +102,20 @@
             transform: translateY(0) scale(1);
             pointer-events: auto;
             visibility: visible;
+        }
+        
+        /* --- 核心修复：点击穿透逻辑 --- */
+        /* 当卡片关闭时，让父容器 (fab-group) 允许点击穿透 */
+        #fab-group.click-through {
+            pointer-events: none; 
+        }
+        /* 但单独允许悬浮按钮被点击，确保即使父元素是 none，按钮仍能工作 */
+        #fab-group.click-through #fab-btn {
+            pointer-events: auto;
+        }
+        /* 当卡片打开时，父容器恢复正常，卡片内元素可点击 */
+        #fab-group:not(.click-through) {
+            pointer-events: auto;
         }
 
         #about {
@@ -248,7 +262,7 @@
                 </p>
                 <p class="mt-4 font-semibold text-lime-700">
                     有兴趣的合作伙伴，欢迎随时 
-                    <!-- 4. 添加类名 contact-trigger, 移除 onclick -->
+                    <!-- 4. 添加类名 contact-trigger -->
                     <button class="contact-trigger underline hover:text-lime-900">联系我们</button> 
                     详谈。
                 </p>
@@ -256,8 +270,8 @@
         </div>
     </section>
 
-    <!-- Works Section -->
-    <section id="works" class="py-24 bg-gradient-to-b from-white to-lime-50 relative z-10">
+    <!-- Works Section - 注意：已将底部填充 pb-24 增加至 pb-40，以确保浮动按钮不遮挡内容 -->
+    <section id="works" class="pt-24 pb-40 lg:pb-32 bg-gradient-to-b from-white to-lime-50 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
                 <h2 class="text-3xl font-bold text-slate-900 mb-4">参与作品</h2>
@@ -316,7 +330,7 @@
                     </div>
                 </div>
                 <!-- Work 6 -->
-                <!-- 5. 添加类名 contact-trigger, 移除 onclick -->
+                <!-- 5. 添加类名 contact-trigger -->
                 <div class="contact-trigger bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group border-2 border-dashed border-slate-200 flex flex-col justify-center items-center text-center p-8 cursor-pointer">
                     <div class="w-16 h-16 bg-lime-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-lime-100 transition-colors">
                         <i data-lucide="plus" class="w-8 h-8 text-lime-400"></i>
@@ -352,10 +366,12 @@
         </div>
     </footer>
 
-    <!-- 悬浮组 (按钮 + 卡片) -->
-    <div class="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4" id="fab-group">
+    <!-- 悬浮组 (按钮 + 卡片) - 恢复右下角定位，默认添加 click-through 实现点击穿透 -->
+    <div class="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4 click-through" id="fab-group">
+        
         <!-- 卡片 -->
         <div id="fab-card" class="floating-contact-card bg-white rounded-2xl shadow-2xl p-4 mb-2 border border-lime-100 min-w-[260px] relative">
+            <!-- 箭头位置调整为右侧 -->
             <div class="absolute -bottom-2 right-6 w-4 h-4 bg-white transform rotate-45 border-r border-b border-lime-100"></div>
             <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Contact Us</div>
             <!-- Email Item -->
@@ -385,7 +401,7 @@
     </div>
 
     <!-- Toast 提示 -->
-    <div id="toast" class="fixed top-24 right-5 md:bottom-5 md:top-auto bg-slate-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-[60] flex items-center gap-2">
+    <div id="toast" class="fixed top-24 right-5 bg-slate-800 text-white px-6 py-3 rounded-lg shadow-lg transform translate-y-20 opacity-0 transition-all duration-300 z-[60] flex items-center gap-2">
         <i data-lucide="check" class="w-5 h-5 text-lime-400"></i>
         <span id="toast-message">已复制到剪贴板</span>
     </div>
@@ -418,34 +434,36 @@
         function openCard() {
             isCardOpen = true;
             fabCard.classList.add('is-visible');
-            stopPulse(); // 打开卡片 -> 停止跳动
+            // 打开时，移除 click-through 类，让卡片和整个组可点击
+            fabGroup.classList.remove('click-through'); 
+            stopPulse(); 
         }
 
         // 关闭卡片动作
         function closeCard() {
             isCardOpen = false;
             fabCard.classList.remove('is-visible');
-            startPulse(); // 关闭卡片 -> 恢复跳动
+            // 关闭时，添加 click-through 类，实现点击穿透（但按钮自身仍可点击）
+            fabGroup.classList.add('click-through'); 
+            startPulse(); 
         }
 
         // --- 2. 事件监听 ---
 
         // 初始化：默认启动脉冲
         startPulse();
+        // #fab-group 默认在 HTML 中已设置 click-through 类
 
-        // 绑定所有触发器：使用 class 选择器，避免 ID 混乱
+        // 绑定所有触发器
         const triggerBtns = document.querySelectorAll('.contact-trigger');
         
         triggerBtns.forEach(btn => {
             btn.addEventListener('click', (e) => {
-                // 核心修改：阻止事件冒泡和默认行为，防止触发全局关闭
                 e.preventDefault();
                 e.stopPropagation();
                 
-                // 无论当前状态如何，强制打开卡片并停止动画
                 openCard();
 
-                // 如果是移动端菜单里的按钮，顺便关掉菜单
                 if(btn.id === 'mobile-contact-btn') {
                     toggleMobileMenu();
                 }
@@ -454,18 +472,20 @@
 
         // [悬浮按钮] 点击逻辑
         fabBtn.addEventListener('click', (e) => {
-            e.stopPropagation(); // 防止冒泡到 document
+            e.stopPropagation(); 
             if (isCardOpen) {
-                closeCard(); // 如果开着 -> 关掉并跳动
+                closeCard(); 
             } else {
-                openCard(); // 如果关着 -> 打开并静止
+                openCard(); 
             }
         });
 
         // [全局] 点击空白处逻辑
         document.addEventListener('click', (e) => {
-            // 如果点击的不是 FAB 组件内部，且卡片是开着的
-            if (isCardOpen && !fabGroup.contains(e.target)) {
+            const isContactTrigger = e.target.closest('.contact-trigger');
+            
+            // 只有当卡片开着 AND 点击的不是 FAB 组内部 AND 点击的不是任何一个 contact-trigger 时才关闭
+            if (isCardOpen && !fabGroup.contains(e.target) && !isContactTrigger) {
                 closeCard();
             }
         });
