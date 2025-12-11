@@ -104,16 +104,13 @@
             visibility: visible;
         }
         
-        /* --- 核心修复：点击穿透逻辑 --- */
-        /* 当卡片关闭时，让父容器 (fab-group) 允许点击穿透 */
+        /* --- 点击穿透逻辑 --- */
         #fab-group.click-through {
             pointer-events: none; 
         }
-        /* 但单独允许悬浮按钮被点击，确保即使父元素是 none，按钮仍能工作 */
         #fab-group.click-through #fab-btn {
             pointer-events: auto;
         }
-        /* 当卡片打开时，父容器恢复正常，卡片内元素可点击 */
         #fab-group:not(.click-through) {
             pointer-events: auto;
         }
@@ -153,7 +150,6 @@
                     <a href="#services" class="text-slate-600 hover:text-lime-600 font-medium transition-colors">主营业务</a>
                     <a href="#other-services" class="text-slate-600 hover:text-lime-600 font-medium transition-colors">其它业务</a>
                     <a href="#works" class="text-slate-600 hover:text-lime-600 font-medium transition-colors">参与作品</a>
-                    <!-- 1. 添加类名 contact-trigger -->
                     <button class="contact-trigger px-5 py-2.5 bg-slate-900 text-white rounded-full font-medium hover:bg-slate-800 transition-all shadow-lg hover:shadow-lime-300/50">联系我们</button>
                 </div>
 
@@ -171,7 +167,6 @@
                 <a href="#services" class="block px-3 py-3 text-slate-600 hover:text-lime-600 font-medium hover:bg-lime-50 rounded-lg" onclick="toggleMobileMenu()">主营业务</a>
                 <a href="#other-services" class="block px-3 py-3 text-slate-600 hover:text-lime-600 font-medium hover:bg-lime-50 rounded-lg" onclick="toggleMobileMenu()">其它业务</a>
                 <a href="#works" class="block px-3 py-3 text-slate-600 hover:text-lime-600 font-medium hover:bg-lime-50 rounded-lg" onclick="toggleMobileMenu()">参与作品</a>
-                <!-- 2. 添加类名 contact-trigger, 并添加ID用于区分移动端逻辑 -->
                 <button id="mobile-contact-btn" class="contact-trigger w-full px-3 py-3 text-lime-600 font-bold hover:bg-lime-50 rounded-lg">联系我们</button>
             </div>
         </div>
@@ -195,7 +190,6 @@
                 <a href="#works" class="px-8 py-3.5 bg-lime-400 text-slate-900 rounded-full font-bold shadow-lg hover:bg-lime-300 hover:shadow-lime-300/50 transition-all transform hover:-translate-y-1 flex items-center gap-2">
                     查看作品 <i data-lucide="arrow-right" class="w-4 h-4"></i>
                 </a>
-                <!-- 3. 添加类名 contact-trigger -->
                 <button class="contact-trigger px-8 py-3.5 bg-white text-slate-700 border border-slate-200 rounded-full font-bold hover:bg-slate-50 transition-all hover:border-slate-300">
                     合作咨询
                 </button>
@@ -262,7 +256,6 @@
                 </p>
                 <p class="mt-4 font-semibold text-lime-700">
                     有兴趣的合作伙伴，欢迎随时 
-                    <!-- 4. 添加类名 contact-trigger -->
                     <button class="contact-trigger underline hover:text-lime-900">联系我们</button> 
                     详谈。
                 </p>
@@ -270,7 +263,7 @@
         </div>
     </section>
 
-    <!-- Works Section - 注意：已将底部填充 pb-24 增加至 pb-40，以确保浮动按钮不遮挡内容 -->
+    <!-- Works Section -->
     <section id="works" class="pt-24 pb-40 lg:pb-32 bg-gradient-to-b from-white to-lime-50 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
@@ -282,8 +275,9 @@
                 </p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- Works content same as before, simplified for brevity -->
-                <!-- Work 1 -->
+                <!-- 第一行：三个卡片 -->
+                
+                <!-- Work 1: Dreamland -->
                 <a href="https://dream.star-linear.com" target="_blank" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col hover:-translate-y-1">
                     <div class="h-48 relative overflow-hidden flex items-center justify-center">
                         <img src="Dreamland.jpg" alt="Dreamland" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null; this.src='https://placehold.co/480x280/FBCFE8/883A64?text=Dreamland';">
@@ -291,11 +285,15 @@
                     <div class="p-6">
                         <h3 class="text-xl font-bold text-slate-900 mb-2">欢迎来到梦乐园</h3>
                         <div class="space-y-1 text-sm text-slate-600">
-                            <p>中译日 / 润色 / 配音制作</p>
+                            <!-- 修改：润色 -> 本地化 -->
+                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-lime-500"></i>中译日</p>
+                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-lime-500"></i>本地化</p>
+                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-lime-500"></i>配音制作</p>
                         </div>
                     </div>
                 </a>
-                <!-- Work 2 -->
+
+                <!-- Work 2: Ete Chronicle -->
                 <a href="https://etechronicle.chens.ltd/index_jp.html" target="_blank" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col hover:-translate-y-1">
                     <div class="h-48 relative overflow-hidden flex items-center justify-center">
                         <img src="Ete.jpg" alt="Ete" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null; this.src='https://placehold.co/480x280/A8A8A8/2A3F64?text=Ete';">
@@ -303,34 +301,58 @@
                     <div class="p-6">
                         <h3 class="text-xl font-bold text-slate-900 mb-2">艾塔纪元</h3>
                         <div class="space-y-1 text-sm text-slate-600">
-                            <p>中译日 / 润色</p>
+                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-leaf-500"></i>中译日</p>
+                            <!-- 修改：润色 -> 本地化 -->
+                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-leaf-500"></i>本地化</p>
                         </div>
                     </div>
                 </a>
-                <!-- Work 3: Short Dramas -->
-                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group p-6">
-                    <div class="text-center mb-4"><i data-lucide="clapperboard" class="w-10 h-10 text-orange-400 mx-auto"></i></div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-2 text-center">多个短剧项目</h3>
-                    <p class="text-center text-sm text-slate-600">配音统筹 / 中文配音 / 日语配音</p>
-                </div>
-                <!-- Work 4: Indie Games -->
-                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group p-6">
-                    <div class="text-center mb-4"><i data-lucide="joystick" class="w-10 h-10 text-violet-500 mx-auto"></i></div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-2 text-center">尚未公开的游戏项目</h3>
-                    <p class="text-center text-sm text-slate-600">日语本地化润色 / 配音统筹 / 日语配音</p>
-                </div>
-                <!-- Work 5: Websites -->
+
+                <!-- Work 3: Websites (Moved to Row 1, Position 3) -->
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col hover:-translate-y-1">
                     <div class="h-48 relative overflow-hidden flex items-center justify-center">
                         <img src="Others.png" alt="Websites" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null; this.src='https://placehold.co/480x280/CFECF2/097E91?text=Websites';">
                     </div>
                     <div class="p-6">
                         <h3 class="text-xl font-bold text-slate-900 mb-2">各类官网本地化</h3>
-                        <p class="text-sm text-slate-600">中译日 / 日译中</p>
+                        <div class="space-y-1 text-sm text-slate-600">
+                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-500"></i>中译日 / 日译中</p>
+                        </div>
+                        <p class="text-xs text-slate-400 mt-2 pt-2 border-t border-slate-100">为企业出海提供精准的语言支持，确保品牌形象的准确传达。</p>
                     </div>
                 </div>
-                <!-- Work 6 -->
-                <!-- 5. 添加类名 contact-trigger -->
+
+                <!-- 第二行：短剧、游戏、联系 -->
+
+                <!-- Work 4: Short Dramas (Moved to Row 2, Position 1) -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group p-6 flex flex-col justify-center items-center text-center">
+                    <div class="mb-4 bg-orange-50 p-4 rounded-full group-hover:scale-110 transition-transform">
+                        <i data-lucide="clapperboard" class="w-8 h-8 text-orange-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">多个短剧项目</h3>
+                    <!-- 居中显示内容 -->
+                    <div class="text-sm text-slate-600 space-y-1">
+                        <p>配音统筹</p>
+                        <p>中文配音</p>
+                        <p>日语配音</p>
+                    </div>
+                </div>
+
+                <!-- Work 5: Indie Games (Moved to Row 2, Position 2) -->
+                <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group p-6 flex flex-col justify-center items-center text-center">
+                    <div class="mb-4 bg-violet-50 p-4 rounded-full group-hover:scale-110 transition-transform">
+                        <i data-lucide="joystick" class="w-8 h-8 text-violet-500"></i>
+                    </div>
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">尚未公开的游戏项目</h3>
+                    <!-- 居中显示内容 -->
+                    <div class="text-sm text-slate-600 space-y-1">
+                        <p>日语本地化润色</p>
+                        <p>配音统筹</p>
+                        <p>日语配音</p>
+                    </div>
+                </div>
+
+                <!-- Work 6: Contact -->
                 <div class="contact-trigger bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group border-2 border-dashed border-slate-200 flex flex-col justify-center items-center text-center p-8 cursor-pointer">
                     <div class="w-16 h-16 bg-lime-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-lime-100 transition-colors">
                         <i data-lucide="plus" class="w-8 h-8 text-lime-400"></i>
@@ -345,7 +367,6 @@
     <!-- Footer -->
     <footer class="bg-slate-50 py-12 border-t border-slate-200 relative z-10" id="footer">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-between items-center">
-            <!-- 6. 添加类名 contact-trigger -->
             <h3 class="contact-trigger text-2xl font-bold text-slate-900 mb-6 border-b-2 border-lime-400 pb-1 cursor-pointer">联系我们</h3>
             <div class="flex flex-col sm:flex-row gap-6 md:gap-12 text-center md:text-left mb-8">
                 <div class="flex items-center gap-2 text-slate-700 hover:text-lime-600 transition-colors cursor-pointer group" onclick="copyToClipboard('chilllemon29@gmail.com')">
@@ -407,7 +428,7 @@
     </div>
 
     <script>
-        // 初始化图标
+        // Initialize Lucide Icons
         lucide.createIcons();
 
         // --- 核心变量 ---
