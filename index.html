@@ -3,13 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>上海闲柠文化官网:index.html</title>
+    <title>上海闲柠文化官网 / 上海閑檸文化</title>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&family=Noto+Sans+JP:wght@300;400;500;700&display=swap" rel="stylesheet">
     
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -37,7 +37,7 @@
                         }
                     },
                     fontFamily: {
-                        sans: ['"Noto Sans SC"', 'sans-serif'],
+                        sans: ['"Noto Sans SC"', '"Noto Sans JP"', 'sans-serif'],
                     }
                 }
             }
@@ -46,9 +46,14 @@
     
     <style>
         body {
-            font-family: 'Noto Sans SC', sans-serif;
+            font-family: 'Noto Sans SC', 'Noto Sans JP', sans-serif;
             scroll-behavior: smooth;
         }
+        
+        /* 双语显示逻辑 */
+        body.lang-zh .ja { display: none !important; }
+        body.lang-ja .zh { display: none !important; }
+
         .glass-nav {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(12px);
@@ -94,7 +99,7 @@
             transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
             opacity: 0;
             transform: translateY(20px) scale(0.95);
-            pointer-events: none; /* 卡片隐藏时自身不可点击 */
+            pointer-events: none;
             visibility: hidden;
         }
         .floating-contact-card.is-visible {
@@ -104,16 +109,10 @@
             visibility: visible;
         }
         
-        /* --- 点击穿透逻辑 --- */
-        #fab-group.click-through {
-            pointer-events: none; 
-        }
-        #fab-group.click-through #fab-btn {
-            pointer-events: auto;
-        }
-        #fab-group:not(.click-through) {
-            pointer-events: auto;
-        }
+        /* 点击穿透逻辑 */
+        #fab-group.click-through { pointer-events: none; }
+        #fab-group.click-through #fab-btn { pointer-events: auto; }
+        #fab-group:not(.click-through) { pointer-events: auto; }
 
         #about {
             min-height: 100vh;
@@ -124,7 +123,7 @@
         }
     </style>
 </head>
-<body class="bg-slate-50 text-slate-800 antialiased selection:bg-lime-300 selection:text-lime-900 relative">
+<body class="bg-slate-50 text-slate-800 antialiased selection:bg-lime-300 selection:text-lime-900 relative lang-zh">
 
     <div class="fixed inset-0 overflow-hidden pointer-events-none">
         <div class="blob bg-lime-200 w-96 h-96 rounded-full top-0 left-0 -translate-x-1/2 -translate-y-1/2"></div>
@@ -145,14 +144,30 @@
                     </div>
                 </div>
 
+                <!-- 电脑端导航 -->
                 <div class="hidden md:flex space-x-8 items-center">
-                    <a href="#about" class="text-slate-600 hover:text-lime-600 font-medium transition-colors">关于我们</a>
-                    <a href="#services" class="text-slate-600 hover:text-lime-600 font-medium transition-colors">主营业务</a>
-                    <a href="#other-services" class="text-slate-600 hover:text-lime-600 font-medium transition-colors">其它业务</a>
-                    <a href="#works" class="text-slate-600 hover:text-lime-600 font-medium transition-colors">合作案例</a>
-                    <button class="contact-trigger px-5 py-2.5 bg-slate-900 text-white rounded-full font-medium hover:bg-slate-800 transition-all shadow-lg hover:shadow-lime-300/50">联系我们</button>
+                    <a href="#about" class="text-slate-600 hover:text-lime-600 font-medium transition-colors">
+                        <span class="zh">关于我们</span><span class="ja">企業情報</span>
+                    </a>
+                    <a href="#services" class="text-slate-600 hover:text-lime-600 font-medium transition-colors">
+                        <span class="zh">主营业务</span><span class="ja">主要事業</span>
+                    </a>
+                    <a href="#works" class="text-slate-600 hover:text-lime-600 font-medium transition-colors">
+                        <span class="zh">合作案例</span><span class="ja">制作実績</span>
+                    </a>
+                    <button class="contact-trigger px-5 py-2.5 bg-slate-900 text-white rounded-full font-medium hover:bg-slate-800 transition-all shadow-lg hover:shadow-lime-300/50">
+                        <span class="zh">联系我们</span><span class="ja">お問い合わせ</span>
+                    </button>
+                    <!-- 电脑端语言切换按钮 -->
+                    <div class="h-6 w-px bg-slate-200"></div>
+                    <button class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-100 hover:bg-lime-100 text-slate-600 hover:text-lime-700 transition-colors text-sm font-medium border border-slate-200" onclick="switchLanguage()">
+                        <i data-lucide="languages" class="w-4 h-4"></i>
+                        <span class="zh">JP</span>
+                        <span class="ja">CN</span>
+                    </button>
                 </div>
 
+                <!-- 手机端菜单按钮 -->
                 <div class="md:hidden flex items-center">
                     <button id="mobile-menu-btn" class="text-slate-600 hover:text-slate-900 focus:outline-none">
                         <i data-lucide="menu" class="w-7 h-7"></i>
@@ -161,12 +176,28 @@
             </div>
         </div>
 
-        <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-slate-100 absolute w-full">
-            <div class="px-4 pt-2 pb-6 space-y-2 text-center shadow-xl">
-                <a href="#about" class="block px-3 py-3 text-slate-600 hover:text-lime-600 font-medium hover:bg-lime-50 rounded-lg" onclick="toggleMobileMenu()">关于我们</a>
-                <a href="#services" class="block px-3 py-3 text-slate-600 hover:text-lime-600 font-medium hover:bg-lime-50 rounded-lg" onclick="toggleMobileMenu()">核心服务</a>
-                <a href="#works" class="block px-3 py-3 text-slate-600 hover:text-lime-600 font-medium hover:bg-lime-50 rounded-lg" onclick="toggleMobileMenu()">合作案例</a>
-                <button id="mobile-contact-btn" class="contact-trigger w-full px-3 py-3 text-lime-600 font-bold hover:bg-lime-50 rounded-lg">联系我们</button>
+        <!-- 手机端下拉菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-white/95 backdrop-blur-md border-t border-slate-100 absolute w-full shadow-xl">
+            <div class="px-4 pt-4 pb-6 space-y-2 text-center">
+                <!-- 手机端语言切换按钮 -->
+                <button class="w-full flex justify-center items-center gap-2 px-3 py-3 text-lime-700 font-bold bg-lime-50 rounded-lg border border-lime-100 mb-4" onclick="switchLanguage(); toggleMobileMenu();">
+                    <i data-lucide="languages" class="w-5 h-5"></i>
+                    <span class="zh">切换至日语 (JP)</span>
+                    <span class="ja">中国語表示に切り替える (CN)</span>
+                </button>
+                
+                <a href="#about" class="block px-3 py-3 text-slate-600 hover:text-lime-600 font-medium hover:bg-lime-50 rounded-lg" onclick="toggleMobileMenu()">
+                    <span class="zh">关于我们</span><span class="ja">企業情報</span>
+                </a>
+                <a href="#services" class="block px-3 py-3 text-slate-600 hover:text-lime-600 font-medium hover:bg-lime-50 rounded-lg" onclick="toggleMobileMenu()">
+                    <span class="zh">核心服务</span><span class="ja">主要事業</span>
+                </a>
+                <a href="#works" class="block px-3 py-3 text-slate-600 hover:text-lime-600 font-medium hover:bg-lime-50 rounded-lg" onclick="toggleMobileMenu()">
+                    <span class="zh">合作案例</span><span class="ja">制作実績</span>
+                </a>
+                <button id="mobile-contact-btn" class="contact-trigger w-full px-3 py-3 text-lime-600 font-bold hover:bg-lime-50 rounded-lg mt-2">
+                    <span class="zh">联系我们</span><span class="ja">お問い合わせ</span>
+                </button>
             </div>
         </div>
     </nav>
@@ -176,22 +207,25 @@
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-lime-100 text-lime-800 text-sm font-semibold mb-8 border border-lime-200 shadow-sm animate-fade-in-up">
                 <span class="w-2 h-2 rounded-full bg-lime-500 animate-pulse"></span>
-                中日内容本地化与创意合作服务
+                <span class="zh">中日内容本地化与创意合作服务</span>
+                <span class="ja">日中コンテンツビジネスを支援するローカライズパートナー</span>
             </div>
             <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold text-slate-900 leading-tight mb-6">
-                连接中国与日本的 <br>
-                <span class="gradient-text">ACGN 内容合作伙伴</span>
+                <span class="zh">连接中国与日本的 <br> <span class="gradient-text">ACGN 内容合作伙伴</span></span>
+                <span class="ja">中国と日本をつなぐ <br> <span class="gradient-text">コンテンツビジネスパートナー</span></span>
             </h1>
             <p class="mt-4 text-xl text-slate-500 max-w-2xl mx-auto leading-relaxed">
-                提供游戏、音声作品及二次元内容的本地化、配音制作与跨境合作支持。<br>
+                <span class="zh">提供游戏、音声作品及二次元内容的本地化、配音制作与跨境合作支持。</span>
+                <span class="ja">ゲーム・音声作品・二次元コンテンツのローカライズから中国市場展開まで、日中間のコンテンツビジネスをサポートいたします。</span>
+                <br>
                 <span class="text-sm uppercase tracking-widest text-slate-400 mt-2 block">Cross-border Localization & Creative Support</span>
             </p>
             <div class="mt-10 flex flex-wrap justify-center gap-4">
                 <a href="#services" class="px-6 py-3 bg-lime-400 text-slate-900 rounded-full font-bold shadow-md hover:bg-lime-300 hover:shadow-lime-300/50 transition-all transform hover:-translate-y-1">
-                    业务介绍
+                    <span class="zh">业务介绍</span><span class="ja">事業内容↓</span>
                 </a>
                 <button class="contact-trigger px-6 py-3 bg-slate-900 text-white rounded-full font-bold hover:bg-slate-800 transition-all shadow-md transform hover:-translate-y-1">
-                    联系我们
+                    <span class="zh">联系我们</span><span class="ja">お問い合わせ</span>
                 </button>
             </div>
         </div>
@@ -201,9 +235,13 @@
     <section id="services" class="py-24 bg-white relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-slate-900 mb-4">核心服务</h2>
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">
+                    <span class="zh">核心服务</span><span class="ja">主要事業</span>
+                </h2>
                 <div class="w-16 h-1 bg-lime-400 mx-auto rounded-full"></div>
-                <p class="mt-4 text-slate-500">连接不同维度的创作需求</p>
+                <p class="mt-4 text-slate-500">
+                    <span class="zh">连接不同维度的创作需求</span><span class="ja">多様なクリエイティブニーズをつなぐ</span>
+                </p>
             </div>
 
             <div class="grid md:grid-cols-2 gap-8 lg:gap-12">
@@ -215,14 +253,16 @@
                         </div>
                         <span class="text-xs font-bold text-slate-300 uppercase tracking-widest">Localization</span>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-900 mb-4">游戏本地化</h3>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">
+                        <span class="zh">游戏本地化</span><span class="ja">ゲームローカライズ</span>
+                    </h3>
                     <div class="grid grid-cols-2 gap-3">
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-lime-500 mr-2 flex-shrink-0"></i> 中译日 / 日译中</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-lime-500 mr-2 flex-shrink-0"></i> 游戏文本翻译</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-lime-500 mr-2 flex-shrink-0"></i> 剧本翻译与润色</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-lime-500 mr-2 flex-shrink-0"></i> 宣传素材本地化</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-lime-500 mr-2 flex-shrink-0"></i> UI文本检查</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-lime-500 mr-2 flex-shrink-0"></i> LQA测试</div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-lime-500 mr-2 flex-shrink-0"></i> <span class="zh">中译日 / 日译中</span><span class="ja">中国語→日本語翻訳 / 日本語→中国語翻訳</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-lime-500 mr-2 flex-shrink-0"></i> <span class="zh">游戏文本翻译</span><span class="ja">ゲームテキスト翻訳</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-lime-500 mr-2 flex-shrink-0"></i> <span class="zh">剧本翻译与润色</span><span class="ja">シナリオ翻訳・カルチャライズ</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-lime-500 mr-2 flex-shrink-0"></i> <span class="zh">宣传素材本地化</span><span class="ja">プロモーション素材のローカライズ</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-lime-500 mr-2 flex-shrink-0"></i> <span class="zh">UI文本检查</span><span class="ja">UIテキスト確認</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-lime-500 mr-2 flex-shrink-0"></i> <span class="zh">LQA测试</span><span class="ja">LQA（言語品質保証）対応</span></div>
                     </div>
                 </div>
 
@@ -234,15 +274,18 @@
                         </div>
                         <span class="text-xs font-bold text-slate-300 uppercase tracking-widest">Voice Production</span>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-900 mb-4">音声制作支持</h3>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">
+                        <span class="zh">音声制作支持</span><span class="ja">音声制作サポート</span>
+                    </h3>
                     <p class="text-sm text-slate-500 mb-4 pb-4 border-b border-slate-200">
-                        与日本配音相关企业深度合作，为项目提供全方位的配音协调与支持。
+                        <span class="zh">与日本配音相关企业深度合作，为项目提供全方位的配音协调与支持。</span>
+                        <span class="ja">日本の音声制作関連企業との協力体制により、プロジェクトに合わせたキャスティングや制作サポートを提供します。</span>
                     </p>
                     <div class="grid grid-cols-2 gap-3">
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-leaf-500 mr-2 flex-shrink-0"></i> 日本声优资源对接</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-leaf-500 mr-2 flex-shrink-0"></i> 配音企划支持</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-leaf-500 mr-2 flex-shrink-0"></i> 录音流程协调</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-leaf-500 mr-2 flex-shrink-0"></i> 音声作品本地化</div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-leaf-500 mr-2 flex-shrink-0"></i> <span class="zh">日本声优资源对接</span><span class="ja">日本声優のキャスティング</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-leaf-500 mr-2 flex-shrink-0"></i> <span class="zh">配音企划支持</span><span class="ja">音声企画プランニング</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-leaf-500 mr-2 flex-shrink-0"></i> <span class="zh">录音流程协调</span><span class="ja">収録進行ディレクション</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-leaf-500 mr-2 flex-shrink-0"></i> <span class="zh">音声作品本地化</span><span class="ja">音声作品のローカライズ</span></div>
                     </div>
                 </div>
 
@@ -254,13 +297,15 @@
                         </div>
                         <span class="text-xs font-bold text-slate-300 uppercase tracking-widest">Coordination</span>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-900 mb-4">跨境项目协调</h3>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">
+                        <span class="zh">跨境项目协调</span><span class="ja">海外展開プロジェクトマネジメント</span>
+                    </h3>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-cyan-500 mr-2 flex-shrink-0"></i> 日本创作者沟通</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-cyan-500 mr-2 flex-shrink-0"></i> 商务邮件与洽谈支持</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-cyan-500 mr-2 flex-shrink-0"></i> 跨国项目进度协调</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-cyan-500 mr-2 flex-shrink-0"></i> 中国市场需求反馈</div>
-                        <div class="flex items-center text-sm text-slate-600 sm:col-span-2"><i data-lucide="check" class="w-4 h-4 text-cyan-500 mr-2 flex-shrink-0"></i> 针对性本地化方向建议</div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-cyan-500 mr-2 flex-shrink-0"></i> <span class="zh">日本创作者沟通</span><span class="ja">日本クリエイターとのコミュニケーション</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-cyan-500 mr-2 flex-shrink-0"></i> <span class="zh">商务邮件与洽谈支持</span><span class="ja">ビジネスメール対応・商談サポート</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-cyan-500 mr-2 flex-shrink-0"></i> <span class="zh">跨国项目进度协调</span><span class="ja">国際プロジェクトの進行管理</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-cyan-500 mr-2 flex-shrink-0"></i> <span class="zh">中国市场需求反馈</span><span class="ja">中国市場からのフィードバック共有</span></div>
+                        <div class="flex items-center text-sm text-slate-600 sm:col-span-2"><i data-lucide="check" class="w-4 h-4 text-cyan-500 mr-2 flex-shrink-0"></i> <span class="zh">针对性本地化方向建议</span><span class="ja">ターゲット層に合わせたローカライズ提案</span></div>
                     </div>
                 </div>
 
@@ -272,41 +317,20 @@
                         </div>
                         <span class="text-xs font-bold text-slate-300 uppercase tracking-widest">Market Support</span>
                     </div>
-                    <h3 class="text-2xl font-bold text-slate-900 mb-4">市场前期支持</h3>
+                    <h3 class="text-2xl font-bold text-slate-900 mb-4">
+                        <span class="zh">市场前期支持</span><span class="ja">中国市場参入コンサルティング</span>
+                    </h3>
                     <p class="text-sm text-slate-500 mb-4 pb-4 border-b border-slate-200">
-                        为计划进入中国市场的日本内容，提供从需求分析到落地的先期支持。
+                        <span class="zh">为计划进入中国市场的日本内容，提供从本地化规划到发行落地的前期支持。</span>
+                        <span class="ja">中国市場進出を検討されている日本コンテンツに対し、ローカライズ企画から展開まで、初期段階でのサポートを提供します。</span>
                     </p>
                     <div class="grid grid-cols-2 gap-3">
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-orange-500 mr-2 flex-shrink-0"></i> 中文化方案建议</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-orange-500 mr-2 flex-shrink-0"></i> 中国玩家需求分析</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-orange-500 mr-2 flex-shrink-0"></i> 中国平台信息整理</div>
-                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-orange-500 mr-2 flex-shrink-0"></i> 合作资源协调</div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-orange-500 mr-2 flex-shrink-0"></i> <span class="zh">中文化方案建议</span><span class="ja">中国語ローカライズ方針のご提案</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-orange-500 mr-2 flex-shrink-0"></i> <span class="zh">中国市场趋势分析</span><span class="ja">中国市場のトレンド分析</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-orange-500 mr-2 flex-shrink-0"></i> <span class="zh">中国平台信息整理</span><span class="ja">中国向けプラットフォーム情報の整理</span></div>
+                        <div class="flex items-center text-sm text-slate-600"><i data-lucide="check" class="w-4 h-4 text-orange-500 mr-2 flex-shrink-0"></i> <span class="zh">合作资源协调</span><span class="ja">協業先・関連リソースの調整</span></div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Other Services Section -->
-    <section id="other-services" class="py-16 bg-lime-50 relative z-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-            <div class="text-center mb-12">
-                <h2 class="text-3xl font-bold text-slate-900 mb-4">其它业务</h2>
-                <div class="w-16 h-1 bg-lime-400 mx-auto rounded-full"></div>
-            </div>
-            <div class="max-w-3xl mx-auto p-6 bg-white border-l-4 border-lime-400 rounded-xl shadow-lg transition-all duration-300 hover:shadow-xl">
-                <h3 class="text-xl font-bold text-slate-800 mb-2 flex items-center justify-center">
-                    <i data-lucide="package-search" class="w-6 h-6 text-lime-600 mr-2"></i>
-                    日本周边进口与代购服务
-                </h3>
-                <p class="text-slate-600 max-w-lg mx-auto leading-relaxed">
-                    作为团队兴趣的延伸，我们正在小范围尝试日本动漫、游戏周边产品的进口与代购服务。
-                </p>
-                <p class="mt-4 font-semibold text-lime-700">
-                    有兴趣的合作伙伴，欢迎随时 
-                    <button class="contact-trigger underline hover:text-lime-900">联系我们</button> 
-                    详谈。
-                </p>
             </div>
         </div>
     </section>
@@ -315,15 +339,19 @@
     <section id="works" class="pt-24 pb-40 lg:pb-32 bg-gradient-to-b from-white to-lime-50 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-16">
-                <h2 class="text-3xl font-bold text-slate-900 mb-4">合作案例</h2>
+                <h2 class="text-3xl font-bold text-slate-900 mb-4">
+                    <span class="zh">合作案例</span><span class="ja">制作実績</span>
+                </h2>
                 <div class="w-16 h-1 bg-lime-400 mx-auto rounded-full"></div>
                 <p class="mt-4 text-slate-500">
-                    涵盖手游、短剧、官网及游戏项目的多领域作品展示
-                    <span class="text-sm text-slate-400 italic block mt-1">持续更新中...</span>
+                    <span class="zh">涵盖手游,短剧,官网及游戏项目的多领域作品展示</span>
+                    <span class="ja">モバイルゲーム、ショートドラマ、公式サイトなど、多彩なジャンルの実績をご紹介します</span>
+                    <span class="text-sm text-slate-400 italic block mt-1">
+                        <span class="zh">持续更新中...</span><span class="ja">随時更新中</span>
+                    </span>
                 </p>
             </div>
             <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <!-- 第一行：三个卡片 -->
                 
                 <!-- Work 1: Dreamland -->
                 <a href="https://dream.star-linear.com" target="_blank" class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col hover:-translate-y-1">
@@ -331,12 +359,13 @@
                         <img src="Dreamland.jpg" alt="Dreamland" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null; this.src='https://placehold.co/480x280/FBCFE8/883A64?text=Dreamland';">
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">欢迎来到梦乐园</h3>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">
+                            <span class="zh">欢迎来到梦乐园</span><span class="ja">ドリームランドへようこそ</span>
+                        </h3>
                         <div class="space-y-1 text-sm text-slate-600">
-                            <!-- 修改：润色 -> 本地化 -->
-                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-lime-500"></i>中译日</p>
-                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-lime-500"></i>本地化</p>
-                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-lime-500"></i>配音制作</p>
+                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-lime-500"></i><span class="zh">中译日</span><span class="ja">中日翻訳</span></p>
+                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-lime-500"></i><span class="zh">本地化</span><span class="ja">ローカライズ</span></p>
+                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-lime-500"></i><span class="zh">配音制作</span><span class="ja">音声制作</span></p>
                         </div>
                     </div>
                 </a>
@@ -347,56 +376,62 @@
                         <img src="Ete.jpg" alt="Ete" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null; this.src='https://placehold.co/480x280/A8A8A8/2A3F64?text=Ete';">
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">艾塔纪元</h3>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">
+                            <span class="zh">艾塔纪元</span><span class="ja">エタクロニクル</span>
+                        </h3>
                         <div class="space-y-1 text-sm text-slate-600">
-                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-leaf-500"></i>中译日</p>
-                            <!-- 修改：润色 -> 本地化 -->
-                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-leaf-500"></i>本地化</p>
+                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-leaf-500"></i><span class="zh">中译日</span><span class="ja">中日翻訳</span></p>
+                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-leaf-500"></i><span class="zh">本地化</span><span class="ja">ローカライズ</span></p>
                         </div>
                     </div>
                 </a>
 
-                <!-- Work 3: Websites (Moved to Row 1, Position 3) -->
+                <!-- Work 3: Websites -->
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group flex flex-col hover:-translate-y-1">
                     <div class="h-48 relative overflow-hidden flex items-center justify-center">
                         <img src="Others.png" alt="Websites" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" onerror="this.onerror=null; this.src='https://placehold.co/480x280/CFECF2/097E91?text=Websites';">
                     </div>
                     <div class="p-6">
-                        <h3 class="text-xl font-bold text-slate-900 mb-2">各类官网本地化</h3>
+                        <h3 class="text-xl font-bold text-slate-900 mb-2">
+                            <span class="zh">各类官网本地化</span><span class="ja">各種公式サイトのローカライズ</span>
+                        </h3>
                         <div class="space-y-1 text-sm text-slate-600">
-                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-500"></i>中译日 / 日译中</p>
+                            <p class="flex items-center gap-2"><i data-lucide="check" class="w-4 h-4 text-cyan-500"></i><span class="zh">中译日 / 日译中</span><span class="ja">中日・日中翻訳</span></p>
                         </div>
-                        <p class="text-xs text-slate-400 mt-2 pt-2 border-t border-slate-100">为企业出海提供精准的语言支持，确保品牌形象的准确传达。</p>
+                        <p class="text-xs text-slate-400 mt-2 pt-2 border-t border-slate-100">
+                            <span class="zh">为企业出海提供精准的语言支持，确保品牌形象的准确传达。</span>
+                            <span class="ja">企業のグローバル展開に向けた正確な言語サポートを提供し、ブランドイメージを的確に伝達します。</span>
+                        </p>
                     </div>
                 </div>
 
-                <!-- 第二行：短剧、游戏、联系 -->
-
-                <!-- Work 4: Short Dramas (Moved to Row 2, Position 1) -->
+                <!-- Work 4: Short Dramas -->
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group p-6 flex flex-col justify-center items-center text-center">
                     <div class="mb-4 bg-orange-50 p-4 rounded-full group-hover:scale-110 transition-transform">
                         <i data-lucide="clapperboard" class="w-8 h-8 text-orange-500"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-3">多个短剧项目</h3>
-                    <!-- 居中显示内容 -->
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">
+                        <span class="zh">多个短剧项目</span><span class="ja">複数タイトルのショートドラマ案件</span>
+                    </h3>
                     <div class="text-sm text-slate-600 space-y-1">
-                        <p>配音统筹</p>
-                        <p>中文配音</p>
-                        <p>日语配音</p>
+                        <p><span class="zh">配音统筹</span><span class="ja">音声演出・ディレクション</span></p>
+                        <p><span class="zh">中文配音</span><span class="ja">中国語吹き替え</span></p>
+                        <p><span class="zh">日语配音</span><span class="ja">日本語吹き替え</span></p>
                     </div>
                 </div>
 
-                <!-- Work 5: Indie Games (Moved to Row 2, Position 2) -->
+                <!-- Work 5: Indie Games -->
                 <div class="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 group p-6 flex flex-col justify-center items-center text-center">
                     <div class="mb-4 bg-violet-50 p-4 rounded-full group-hover:scale-110 transition-transform">
                         <i data-lucide="joystick" class="w-8 h-8 text-violet-500"></i>
                     </div>
-                    <h3 class="text-xl font-bold text-slate-900 mb-3">尚未公开的游戏项目</h3>
-                    <!-- 居中显示内容 -->
+                    <h3 class="text-xl font-bold text-slate-900 mb-3">
+                        <span class="zh">尚未公开的游戏项目</span><span class="ja">未公開ゲームプロジェクト</span>
+                    </h3>
                     <div class="text-sm text-slate-600 space-y-1">
-                        <p>日语本地化润色</p>
-                        <p>配音统筹</p>
-                        <p>日语配音</p>
+                        <p><span class="zh">日语本地化润色</span><span class="ja">日本語ローカライズ・推敲</span></p>
+                        <p><span class="zh">配音统筹</span><span class="ja">音声収録コーディネート</span></p>
+                        <p><span class="zh">日语配音</span><span class="ja">日本語ボイス収録</span></p>
                     </div>
                 </div>
 
@@ -405,8 +440,12 @@
                     <div class="w-16 h-16 bg-lime-50 rounded-full flex items-center justify-center mb-4 group-hover:bg-lime-100 transition-colors">
                         <i data-lucide="plus" class="w-8 h-8 text-lime-400"></i>
                     </div>
-                    <h3 class="text-lg font-bold text-slate-900">期待下一个作品</h3>
-                    <p class="text-slate-500 text-sm mt-2 font-bold text-lime-600">联系我们 <i data-lucide="arrow-right" class="w-4 h-4 inline"></i></p>
+                    <h3 class="text-lg font-bold text-slate-900">
+                        <span class="zh">期待下一个作品</span><span class="ja">次のパートナーシップをお待ちしております</span>
+                    </h3>
+                    <p class="text-slate-500 text-sm mt-2 font-bold text-lime-600">
+                        <span class="zh">联系我们</span><span class="ja">お問い合わせはこちら</span> <i data-lucide="arrow-right" class="w-4 h-4 inline"></i>
+                    </p>
                 </div>
             </div>
         </div>
@@ -415,7 +454,9 @@
     <!-- Footer -->
     <footer class="bg-slate-50 py-12 border-t border-slate-200 relative z-10" id="footer">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-between items-center">
-            <h3 class="contact-trigger text-2xl font-bold text-slate-900 mb-6 border-b-2 border-lime-400 pb-1 cursor-pointer">联系我们</h3>
+            <h3 class="contact-trigger text-2xl font-bold text-slate-900 mb-6 border-b-2 border-lime-400 pb-1 cursor-pointer">
+                <span class="zh">联系我们</span><span class="ja">お問い合わせ</span>
+            </h3>
             <div class="flex flex-col sm:flex-row gap-6 md:gap-12 text-center md:text-left mb-8">
                 <div class="flex items-center gap-2 text-slate-700 hover:text-lime-600 transition-colors cursor-pointer group" onclick="copyToClipboard('chilllemon29@gmail.com')">
                     <i data-lucide="mail" class="w-5 h-5 text-lime-500 flex-shrink-0"></i>
@@ -430,20 +471,17 @@
             </div>
             <div class="w-full h-px bg-slate-200 mb-6"></div>
             <div class="text-sm text-slate-500">
-                &copy; 2024-<script>document.write(new Date().getFullYear())</script> 上海闲柠文化发展有限公司. All rights reserved.
+                &copy; 2024-<script>document.write(new Date().getFullYear())</script> 
+                <span class="zh">上海闲柠文化发展有限公司</span><span class="ja">上海閑檸文化発展有限公司 (Shanghai Chill Lemon Culture Development Co., Ltd.)</span>. All rights reserved.
             </div>
         </div>
     </footer>
 
-    <!-- 悬浮组 (按钮 + 卡片) - 恢复右下角定位，默认添加 click-through 实现点击穿透 -->
+    <!-- 悬浮组 (按钮 + 卡片) -->
     <div class="fixed bottom-8 right-8 z-50 flex flex-col items-end gap-4 click-through" id="fab-group">
-        
-        <!-- 卡片 -->
         <div id="fab-card" class="floating-contact-card bg-white rounded-2xl shadow-2xl p-4 mb-2 border border-lime-100 min-w-[260px] relative">
-            <!-- 箭头位置调整为右侧 -->
             <div class="absolute -bottom-2 right-6 w-4 h-4 bg-white transform rotate-45 border-r border-b border-lime-100"></div>
             <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-3 px-1">Contact Us</div>
-            <!-- Email Item -->
             <div class="p-3 hover:bg-lime-50 rounded-xl cursor-pointer transition-colors flex items-center gap-3 active:scale-95 duration-150 group" onclick="copyToClipboard('chilllemon29@gmail.com')">
                 <div class="bg-lime-100 p-2 rounded-full text-lime-600"><i data-lucide="mail" class="w-5 h-5"></i></div>
                 <div class="flex-1 min-w-0">
@@ -452,7 +490,6 @@
                 </div>
                 <div class="text-slate-300 group-hover:text-lime-500"><i data-lucide="copy" class="w-4 h-4"></i></div>
             </div>
-            <!-- WeChat Item -->
             <div class="mt-2 p-3 hover:bg-leaf-50 rounded-xl cursor-pointer transition-colors flex items-center gap-3 active:scale-95 duration-150 group" onclick="copyToClipboard('aPanko')">
                 <div class="bg-leaf-100 p-2 rounded-full text-leaf-600"><i data-lucide="message-circle" class="w-5 h-5"></i></div>
                 <div class="flex-1 min-w-0">
@@ -463,7 +500,6 @@
             </div>
         </div>
 
-        <!-- 悬浮按钮 -->
         <button id="fab-btn" class="w-16 h-16 bg-slate-900 hover:bg-lime-500 text-white hover:text-white rounded-full shadow-xl shadow-slate-900/30 flex items-center justify-center transition-all duration-300 hover:scale-110 hover:rotate-6 border-4 border-white/20">
             <i data-lucide="message-square-plus" class="w-7 h-7"></i>
         </button>
@@ -479,96 +515,85 @@
         // Initialize Lucide Icons
         lucide.createIcons();
 
-        // --- 核心变量 ---
+        // --- 多语言逻辑 (i18n) ---
+        let currentLang = localStorage.getItem('site_lang') || 'zh';
+
+        function updateLanguage() {
+            // 更新 body 的 class，由 CSS 控制元素的显示/隐藏
+            document.body.classList.remove('lang-zh', 'lang-ja');
+            document.body.classList.add(`lang-${currentLang}`);
+            // 更新 HTML 语言属性，有助于 SEO 和屏幕阅读器
+            document.documentElement.lang = currentLang === 'zh' ? 'zh-CN' : 'ja';
+        }
+
+        function switchLanguage() {
+            currentLang = currentLang === 'zh' ? 'ja' : 'zh';
+            localStorage.setItem('site_lang', currentLang); // 记住用户的选择
+            updateLanguage();
+        }
+
+        // 页面加载时初始化语言
+        updateLanguage();
+
+        // --- 核心交互变量 ---
         const fabBtn = document.getElementById('fab-btn');
         const fabCard = document.getElementById('fab-card');
         const fabGroup = document.getElementById('fab-group');
-        
-        // 状态管理
         let isCardOpen = false;
 
-        // --- 1. 状态控制函数 ---
+        // --- 悬浮卡片控制 ---
+        function startPulse() { fabBtn.classList.add('is-pulsing'); }
+        function stopPulse() { fabBtn.classList.remove('is-pulsing'); }
 
-        // 启动脉冲 (卡片关闭时)
-        function startPulse() {
-            fabBtn.classList.add('is-pulsing');
-        }
-
-        // 停止脉冲 (卡片打开时)
-        function stopPulse() {
-            fabBtn.classList.remove('is-pulsing');
-        }
-
-        // 打开卡片动作
         function openCard() {
             isCardOpen = true;
             fabCard.classList.add('is-visible');
-            // 打开时，移除 click-through 类，让卡片和整个组可点击
             fabGroup.classList.remove('click-through'); 
             stopPulse(); 
         }
 
-        // 关闭卡片动作
         function closeCard() {
             isCardOpen = false;
             fabCard.classList.remove('is-visible');
-            // 关闭时，添加 click-through 类，实现点击穿透（但按钮自身仍可点击）
             fabGroup.classList.add('click-through'); 
             startPulse(); 
         }
 
-        // --- 2. 事件监听 ---
+        startPulse(); // 默认启动脉冲
 
-        // 初始化：默认启动脉冲
-        startPulse();
-        // #fab-group 默认在 HTML 中已设置 click-through 类
-
-        // 绑定所有触发器
-        const triggerBtns = document.querySelectorAll('.contact-trigger');
-        
-        triggerBtns.forEach(btn => {
+        // 绑定所有联系触发器
+        document.querySelectorAll('.contact-trigger').forEach(btn => {
             btn.addEventListener('click', (e) => {
                 e.preventDefault();
                 e.stopPropagation();
-                
                 openCard();
-
                 if(btn.id === 'mobile-contact-btn') {
                     toggleMobileMenu();
                 }
             });
         });
 
-        // [悬浮按钮] 点击逻辑
+        // 悬浮按钮点击
         fabBtn.addEventListener('click', (e) => {
             e.stopPropagation(); 
-            if (isCardOpen) {
-                closeCard(); 
-            } else {
-                openCard(); 
-            }
+            isCardOpen ? closeCard() : openCard(); 
         });
 
-        // [全局] 点击空白处逻辑
+        // 点击空白处关闭
         document.addEventListener('click', (e) => {
             const isContactTrigger = e.target.closest('.contact-trigger');
-            
-            // 只有当卡片开着 AND 点击的不是 FAB 组内部 AND 点击的不是任何一个 contact-trigger 时才关闭
             if (isCardOpen && !fabGroup.contains(e.target) && !isContactTrigger) {
                 closeCard();
             }
         });
 
         // --- 辅助功能 ---
-
-        // 移动端菜单开关
         function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            menu.classList.toggle('hidden');
+            document.getElementById('mobile-menu').classList.toggle('hidden');
         }
         document.getElementById('mobile-menu-btn').addEventListener('click', toggleMobileMenu);
 
-        // 复制功能
+        // 复制功能 (包含双语提示)
         function copyToClipboard(text) {
             const textarea = document.createElement('textarea');
             textarea.value = text;
@@ -577,24 +602,23 @@
             document.execCommand('copy');
             document.body.removeChild(textarea);
             
-            showToast(`已复制: ${text}`);
-            
-            // 复制后自动关闭卡片
+            // 根据当前语言显示提示语
+            const msg = currentLang === 'zh' ? `已复制: ${text}` : `${text} をコピーしました`;
+            showToast(msg);
             closeCard();
         }
 
         // 显示 Toast
         function showToast(message) {
             const toast = document.getElementById('toast');
-            const msgSpan = document.getElementById('toast-message');
-            msgSpan.innerText = message;
+            document.getElementById('toast-message').innerText = message;
             toast.classList.remove('translate-y-20', 'opacity-0');
             setTimeout(() => {
                 toast.classList.add('translate-y-20', 'opacity-0');
             }, 3000);
         }
 
-        // 简单的导航栏滚动阴影效果
+        // 导航栏滚动效果
         window.addEventListener('scroll', () => {
             const nav = document.getElementById('navbar');
             if (window.scrollY > 20) {
